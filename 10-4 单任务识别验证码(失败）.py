@@ -79,10 +79,15 @@ lr = tf.Variable(LEARNING_RATE, dtype=tf.float32)
 X = tf.reshape(x,[BATCH_SIZE,224,224,1])
 # logits 是n*40的tensor
 logits_, end_points = train_network_fn(X)
-logits0 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,0], size=[-1,10]),tf.int32), depth=10)
-logits1 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,10], size=[-1,10]),tf.int32), depth=10)
-logits2 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,20], size=[-1,10]),tf.int32), depth=10)
-logits3 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,30], size=[-1,10]),tf.int32), depth=10)
+# logits0 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,0], size=[-1,10]),tf.int32), depth=10)
+# logits1 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,10], size=[-1,10]),tf.int32), depth=10)
+# logits2 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,20], size=[-1,10]),tf.int32), depth=10)
+# logits3 = tf.one_hot(indices=tf.cast(tf.slice(logits_, begin=[0,30], size=[-1,10]),tf.int32), depth=10)
+# 本身切完就是one_hot形式了，不要再增维计算一次one_hot
+logits0 = tf.cast(tf.slice(logits_, begin=[0,0], size=[-1,10]),tf.int32)
+logits1 = tf.cast(tf.slice(logits_, begin=[0,10], size=[-1,10]),tf.int32)
+logits2 = tf.cast(tf.slice(logits_, begin=[0,20], size=[-1,10]),tf.int32)
+logits3 = tf.cast(tf.slice(logits_, begin=[0,30], size=[-1,10]),tf.int32)
 logits = tf.concat(axis=1, values=[logits0, logits1, logits2, logits3])
 
 
